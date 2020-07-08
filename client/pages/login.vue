@@ -19,18 +19,17 @@
           </div>
 
           <div class="padded">
-              <v-text-field
-                v-model="password"
-                :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                :rules="passwordRules"
-                :type="passwordShow ? 'text' : 'password'"
-                name="input-10-1"
-                label="Password"
-                outlined
-                dense
-                @click:append="passwordShow = !passwordShow"
-              ></v-text-field>
-            </v-col>
+            <v-text-field
+              v-model="password"
+              :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :rules="passwordRules"
+              :type="passwordShow ? 'text' : 'password'"
+              name="input-10-1"
+              label="Password"
+              outlined
+              dense
+              @click:append="passwordShow = !passwordShow"
+            ></v-text-field>
           </div>
 
           <v-btn
@@ -75,13 +74,13 @@ export default {
     passwordRules: [
       v => !!v || "Required",
       v => v.length >= 8 || "Min 8 characters"
-    ],
+    ]
   }),
 
   methods: {
     validate() {
       this.$refs.form.validate();
-    },
+    }
   }
 };
 </script>
@@ -111,6 +110,9 @@ export default {
         text-align: center;
         margin: 0;
         margin-top: 1rem;
+        a {
+          text-decoration: none;
+        }
       }
     }
   }

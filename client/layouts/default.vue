@@ -15,6 +15,11 @@ html {
   overflow: auto;
 }
 
+.container,
+.content {
+  background: rgb(243, 243, 243);
+}
+
 .logo-title {
   font-size: 1.5rem;
   margin-bottom: 0.2rem !important;

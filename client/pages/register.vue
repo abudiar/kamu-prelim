@@ -39,7 +39,16 @@
               outlined
               dense
               required
-            ></v-text-field>
+            >
+              <template v-slot:append>
+                <img
+                  v-if="passwordShow"
+                  width="24"
+                  height="24"
+                  src="@/assets/LoadingIcon.svg"
+                />
+              </template>
+            </v-text-field>
           </div>
 
           <v-row>
@@ -211,6 +220,9 @@ export default {
         text-align: center;
         margin: 0;
         margin-top: 1rem;
+        a {
+          text-decoration: none;
+        }
       }
     }
   }
