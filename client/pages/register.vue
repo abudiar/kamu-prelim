@@ -34,19 +34,26 @@
           <div class="padded">
             <v-text-field
               v-model="username"
-              :rules="usernameRules"
               label="Username"
+              :rules="[usernameRules]"
               outlined
               dense
               required
             >
               <template v-slot:append>
                 <img
-                  v-if="passwordShow"
+                  v-if="loadingUsername"
                   width="24"
                   height="24"
                   src="@/assets/LoadingIcon.svg"
                 />
+                <img
+                  v-else-if="usernameExists"
+                  width="24"
+                  height="24"
+                  src="@/assets/alert.svg"
+                />
+                <!-- <img v-else width="24" height="24" src="@/assets/check.svg" /> -->
               </template>
             </v-text-field>
           </div>
@@ -151,6 +158,7 @@ export default {
     valid: true,
     toast: false,
     toastText: "",
+    toastColor: "red",
     firstName: "",
     firstNameRules: [
       v => !!v || "Required",
@@ -162,11 +170,8 @@ export default {
       v => (v && v.length >= 2) || "Must be more than 1 character"
     ],
     username: "",
-    usernameRules: [
-      v => !!v || "Required",
-      v => (v && v.length >= 2) || "Must be more than 1 character",
-      v => (v && v.length <= 16) || "Must be less 16 characters or less"
-    ],
+    loadingUsername: false,
+    usernameExists: false,
     password: "",
     passwordShow: false,
     passwordRules: [
@@ -203,11 +208,13 @@ export default {
             color: this.preferredColor
           })
           .then(() => {
+            self.toastColor = "green";
             self.toastText = "Registration Success!";
             self.toast = true;
             self.$router.push("/");
           })
           .catch(err => {
+            self.toastColor = "red";
             self.toastText = err.response.data.message;
             self.toast = true;
           });
@@ -215,6 +222,25 @@ export default {
     passwordConfirmRules(v) {
       if (!v) return "Required";
       else return v == this.password || "Doesn't match password";
+    },
+    usernameRules(v) {
+      if (!v) return "Required";
+      else {
+        if (v.length < 2) return "Must be more than 1 character";
+        else if (v.length > 16) return "Must be less 16 characters or less";
+        clearTimeout(this.debounce);
+        const self = this;
+        self.loadingUsername = true;
+        this.debounce = setTimeout(async () => {
+          let usernameExists = await self.$store.dispatch("checkUsername", {
+            username: self.username
+          });
+          self.loadingUsername = false;
+          self.usernameExists = usernameExists.data.exists;
+          if (usernameExists.data.exists) return "Username already exists";
+        }, 600);
+      }
+      return true;
     }
   }
 };

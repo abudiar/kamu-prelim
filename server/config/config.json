@@ -16,10 +16,10 @@
     "operatorsAliases": false
   },
   "production": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "kamu-prelim",
-    "host": "127.0.0.1",
+    "username": "pjrrrgedphcgxj",
+    "password": "2f4ba08800515f235a2a13110eb3bbde44db21093f8c70208a6efd8a6a96557e",
+    "database": "d3ad74m8vg6p3h",
+    "host": "ec2-54-247-78-30.eu-west-1.compute.amazonaws.com",
     "dialect": "postgres",
     "operatorsAliases": false
   }

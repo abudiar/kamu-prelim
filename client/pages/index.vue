@@ -156,6 +156,7 @@ export default {
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas: "topbar" "content";
+  height: 100%;
   .topbar {
     grid-area: topbar;
     border-bottom: 1px solid #dadce0;

@@ -49,7 +49,7 @@
         </v-form>
       </div>
     </v-card>
-    <v-snackbar v-model="toast" color="red" :timeout="3000" :top="true">
+    <v-snackbar v-model="toast" :color="toastColor" :timeout="3000" :top="true">
       {{ toastText }}
     </v-snackbar>
   </v-container>
@@ -68,6 +68,7 @@ export default {
     valid: true,
     toast: false,
     toastText: "",
+    toastColor: "red",
     username: "",
     usernameRules: [v => !!v || "Required"],
     password: "",
@@ -85,11 +86,13 @@ export default {
             password: self.password
           })
           .then(() => {
+            self.toastColor = "green";
             self.toastText = "Login Success!";
             self.toast = true;
             self.$router.push("/");
           })
           .catch(err => {
+            self.toastColor = "red";
             self.toastText = err.response.data.message;
             self.toast = true;
           });

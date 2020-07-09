@@ -99,6 +99,19 @@ class UserController {
             })
             .catch(next)
     }
+
+    static checkUsername(req, res, next) {
+        const { username } = req.body;
+        console.log(req.body);
+        User.findOne({ where: { username } })
+            .then((user) => {
+                if (!user)
+                    res.status(200).json({ exists: false });
+                else
+                    res.status(200).json({ exists: true });
+            })
+            .catch(next)
+    }
 }
 
 module.exports = UserController;

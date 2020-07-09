@@ -1,6 +1,7 @@
 
 import axios from 'axios';
-const serverUrl = 'http://localhost:3001';
+const serverUrl = 'https://kamuprelim.herokuapp.com';
+// const serverUrl = 'http://localhost:3001';
 
 export const state = () => ({
   firstName: '',
@@ -60,6 +61,16 @@ export const actions = {
       .catch((err) => {
         console.log(err);
         throw err;
+      })
+  },
+  checkUsername: (__, payload) => {
+    return axios({
+      url: `${serverUrl}/checkUsername`,
+      method: 'POST',
+      data: payload,
+    })
+      .catch((err) => {
+        // console.log(err);
       })
   },
   setToken: ({ commit, dispatch }, { access_token }) => {
