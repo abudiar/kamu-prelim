@@ -33,12 +33,20 @@
           </div>
 
           <v-btn
-            :disabled="!valid"
+            :disabled="!valid || loading"
             color="success"
             class="mr-4 btn"
             @click="validate"
           >
-            Login
+            <img
+              v-if="loading"
+              width="24"
+              height="24"
+              src="@/assets/LoadingIcon.svg"
+            />
+            <p v-else>
+              Login
+            </p>
           </v-btn>
           <p class="btn-hint">
             Already have an account?
@@ -66,6 +74,7 @@ export default {
   },
   data: () => ({
     valid: true,
+    loading: false,
     toast: false,
     toastText: "",
     toastColor: "red",
@@ -79,23 +88,27 @@ export default {
   methods: {
     validate() {
       const self = this;
-      if (self.$refs.form.validate())
+      if (self.$refs.form.validate()) {
+        this.loading = true;
         self.$store
           .dispatch("login", {
             username: self.username,
             password: self.password
           })
           .then(() => {
+            this.loading = false;
             self.toastColor = "green";
             self.toastText = "Login Success!";
             self.toast = true;
             self.$router.push("/");
           })
           .catch(err => {
+            this.loading = false;
             self.toastColor = "red";
             self.toastText = err.response.data.message;
             self.toast = true;
           });
+      }
     }
   }
 };
@@ -121,6 +134,14 @@ export default {
       }
       .btn {
         width: 100%;
+        .v-btn__content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          p {
+            margin: 0;
+          }
+        }
       }
       .btn-hint {
         text-align: center;

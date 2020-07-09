@@ -114,7 +114,7 @@
             <v-select
               v-model="preferredColor"
               :items="colors"
-              :rules="[v => !!v || 'Preferred color is required']"
+              :rules="[v => !!v || 'Required']"
               label="Preferred Color"
               outlined
               dense
@@ -123,12 +123,20 @@
           </div>
 
           <v-btn
-            :disabled="!valid"
+            :disabled="!valid || loading"
             color="success"
             class="mr-4 btn"
             @click="validate"
           >
-            Register
+            <img
+              v-if="loading"
+              width="24"
+              height="24"
+              src="@/assets/LoadingIcon.svg"
+            />
+            <p v-else>
+              Register
+            </p>
           </v-btn>
           <p class="btn-hint">
             Already have an account?
@@ -156,6 +164,7 @@ export default {
   },
   data: () => ({
     valid: true,
+    loading: false,
     toast: false,
     toastText: "",
     toastColor: "red",
@@ -196,7 +205,8 @@ export default {
   methods: {
     validate() {
       const self = this;
-      if (this.$refs.form.validate())
+      if (this.$refs.form.validate()) {
+        this.loading = true;
         this.$store
           .dispatch("register", {
             first_name: this.firstName,
@@ -208,16 +218,19 @@ export default {
             color: this.preferredColor
           })
           .then(() => {
+            this.loading = false;
             self.toastColor = "green";
             self.toastText = "Registration Success!";
             self.toast = true;
             self.$router.push("/");
           })
           .catch(err => {
+            this.loading = false;
             self.toastColor = "red";
             self.toastText = err.response.data.message;
             self.toast = true;
           });
+      }
     },
     passwordConfirmRules(v) {
       if (!v) return "Required";
@@ -266,6 +279,14 @@ export default {
       }
       .btn {
         width: 100%;
+        .v-btn__content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          p {
+            margin: 0;
+          }
+        }
       }
       .btn-hint {
         text-align: center;
