@@ -49,6 +49,9 @@
         </v-form>
       </div>
     </v-card>
+    <v-snackbar v-model="toast" color="red" :timeout="3000" :top="true">
+      {{ toastText }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -63,23 +66,33 @@ export default {
   },
   data: () => ({
     valid: true,
+    toast: false,
+    toastText: "",
     username: "",
-    usernameRules: [
-      v => !!v || "Required",
-      v => (v && v.length >= 2) || "Must be more than 1 character",
-      v => (v && v.length <= 16) || "Must be less 16 characters or less"
-    ],
+    usernameRules: [v => !!v || "Required"],
     password: "",
     passwordShow: false,
-    passwordRules: [
-      v => !!v || "Required",
-      v => v.length >= 8 || "Min 8 characters"
-    ]
+    passwordRules: [v => !!v || "Required"]
   }),
 
   methods: {
     validate() {
-      this.$refs.form.validate();
+      const self = this;
+      if (self.$refs.form.validate())
+        self.$store
+          .dispatch("login", {
+            username: self.username,
+            password: self.password
+          })
+          .then(() => {
+            self.toastText = "Login Success!";
+            self.toast = true;
+            self.$router.push("/");
+          })
+          .catch(err => {
+            self.toastText = err.response.data.message;
+            self.toast = true;
+          });
     }
   }
 };

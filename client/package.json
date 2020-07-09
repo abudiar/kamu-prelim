@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
+    "dev": "nuxt --port 3333",
     "build": "nuxt build",
     "start": "nuxt start",
     "export": "nuxt export",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "axios": "^0.19.2",
     "cookie-universal": "^2.1.4",
     "cookie-universal-nuxt": "^2.1.4",
     "nuxt": "^2.13.0"

@@ -5,14 +5,18 @@
         <p class="logo-title">K A M U</p>
       </div>
       <div class="center-vertical btn">
-        <a>
+        <a @click="logout">
           Logout
         </a>
       </div>
       <div class="center-vertical avatar">
-        <v-avatar :color="preferredColor" size="48">
+        <v-avatar
+          :color="preferredColor ? preferredColor.toLowerCase() : ''"
+          size="48"
+        >
           <span class="white--text headline">
-            {{ firstName[0] }}{{ lastName[0] }}
+            {{ firstName ? firstName[0].toUpperCase() : ""
+            }}{{ lastName ? lastName[0].toUpperCase() : "" }}
           </span>
         </v-avatar>
       </div>
@@ -20,12 +24,16 @@
     <div class="content">
       <div class="card-container">
         <v-card class="main-card" flat>
-          <p class="card-title">User Data</p>
+          <p class="card-title">Registered Data</p>
           <v-row>
             <v-col cols="12" sm="6" class="padded-col">
               <v-text-field
                 class="text"
-                :value="firstName"
+                :value="
+                  firstName
+                    ? firstName[0].toUpperCase() + firstName.slice(1)
+                    : ''
+                "
                 label="First Name"
                 readonly
                 dense
@@ -36,7 +44,9 @@
             <v-col cols="12" sm="6" class="padded-col">
               <v-text-field
                 class="text"
-                :value="lastName"
+                :value="
+                  lastName ? lastName[0].toUpperCase() + lastName.slice(1) : ''
+                "
                 label="Last Name"
                 readonly
                 dense
@@ -118,8 +128,25 @@ export default {
       return this.$store.state.preferredColor;
     }
   },
-  methods: {}
-  // middleware: ["auth"]
+  methods: {
+    logout() {
+      this.$router.push("/login");
+      window.$nuxt.$cookiz.remove("access_token");
+      this.$store.commit("updateUser", {
+        firstName: "",
+        lastName: "",
+        username: "",
+        email: "",
+        phone: "",
+        preferredColor: ""
+      });
+    }
+  },
+  mounted() {
+    this.$store.dispatch("checkLoggedIn");
+    this.$store.dispatch("getUser");
+  },
+  middleware: ["auth"]
 };
 </script>
 
@@ -156,6 +183,7 @@ export default {
   }
   .content {
     grid-area: content;
+    padding: 1rem;
     .card-container {
       min-height: 100%;
       display: flex;
@@ -180,8 +208,9 @@ export default {
           }
         }
         .card-title {
-          font-size: 1.5rem;
-          padding-left: 1.5rem;
+          font-size: 1.7rem;
+          padding-left: 0.8rem;
+          padding-bottom: 1rem;
         }
         .padded {
           padding: 0.2rem 0;

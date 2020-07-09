@@ -132,6 +132,9 @@
         </v-form>
       </div>
     </v-card>
+    <v-snackbar v-model="toast" color="red" :timeout="3000" :top="true">
+      {{ toastText }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -146,6 +149,8 @@ export default {
   },
   data: () => ({
     valid: true,
+    toast: false,
+    toastText: "",
     firstName: "",
     firstNameRules: [
       v => !!v || "Required",
@@ -185,7 +190,27 @@ export default {
 
   methods: {
     validate() {
-      this.$refs.form.validate();
+      const self = this;
+      if (this.$refs.form.validate())
+        this.$store
+          .dispatch("register", {
+            first_name: this.firstName,
+            last_name: this.lastName,
+            username: this.username,
+            password: this.password,
+            email: this.email,
+            phone: this.phone,
+            color: this.preferredColor
+          })
+          .then(() => {
+            self.toastText = "Registration Success!";
+            self.toast = true;
+            self.$router.push("/");
+          })
+          .catch(err => {
+            self.toastText = err.response.data.message;
+            self.toast = true;
+          });
     },
     passwordConfirmRules(v) {
       if (!v) return "Required";
